@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Alumni</title>
+  <style>
+ 
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color:white;
+      color: #c51b1b;
+    }
+
+    header {
+      background-color: yellow;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header input {
+      padding: 10px;
+      margin-top: 10px;
+      width: 50%;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    #alumniList {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin: 20px;
+    }
+
+    .alumniProfile {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 10px;
+      width: 200px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .alumniProfile:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .alumniProfile img {
+      width: 100%;
+      height: auto;
+      border-radius: 50%;
+    }
+
+    h1 {
+      font-size: 2em;
+    }
+
+    h3 {
+      font-size: 1.2em;
+      margin-top: 10px;
+    }
+
+    p {
+      font-size: 1em;
+      color: #4d4d4d;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Alumni Universitas KUNINGAN</h1>
+    <input type="text" id="searchInput" placeholder="Cari alumni berdasarkan nama atau jurusan...">
+  </header>
+  
+  <section id="alumniList">
+    <div class="alumniProfile" data-nama="Alya" data-jurusan="Desain Komunikasi Visual">
+      <img src="profile1.jpg" alt="Alya">
+      <h3>Alya</h3>
+      <p>Jurusan: Desain Komunikasi Visual</p>
+    </div>
+    <div class="alumniProfile" data-nama="Nadia Putri" data-jurusan="Sistem Informasi">
+      <img src="profile2.jpg" alt="Nadia Putri">
+      <h3>Nadia Putri</h3>
+      <p>Jurusan: Sistem Informasi</p>
+    </div>
+    <div class="alumniProfile" data-nama="Cecilia" data-jurusan="Teknik Informatika">
+      <img src="profile3.jpg" alt="Cecilia">
+      <h3>Cecilia</h3>
+      <p>Jurusan: Teknik Informatika</p>
+    </div>
+    <div class="alumniProfile" data-nama="Kiki" data-jurusan="Teknik Informatika">
+      <img src="profile3.jpg" alt="Kiki">
+      <h3>Kiki</h3>
+      <p>Jurusan: Teknik Informatika</p>
+    </div>
+   
+  </section>
+
+  <script>
+    
+    const searchInput = document.getElementById('searchInput');
+    const alumniList = document.getElementById('alumniList');
+
+    function filterAlumni() {
+      const searchTerm = searchInput.value.toLowerCase();
+
+      const alumniProfiles = alumniList.getElementsByClassName('alumniProfile');
+
+      Array.from(alumniProfiles).forEach(profile => {
+        const nama = profile.getAttribute('data-nama').toLowerCase();
+        const jurusan = profile.getAttribute('data-jurusan').toLowerCase();
+
+        if (nama.includes(searchTerm) || jurusan.includes(searchTerm)) {
+          profile.style.display = ''; 
+        } else {
+          profile.style.display = 'none'; 
+        }
+      });
+    }
+
+    searchInput.addEventListener('input', filterAlumni);
+  </script>
+</body>
+</html>
