@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lowongan Kerja</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Lowongan Kerja</h2>
+
+    <!-- Form for Create/Update -->
+    <form id="jobForm" class="mb-4">
+        <div class="form-group">
+            <label for="jobId">Job Id:</label>
+            <input type="number" class="form-control" id="jobId">
+        </div>
+        <div class="form-group">
+            <label for="jobPosisi">Posisi:</label>
+            <input type="text" class="form-control" id="jobPosisi" required>
+        </div>
+        <div class="form-group">
+            <label for="jobDeskripsi">Deskripsi:</label>
+            <input type="text" class="form-control" id="jobDeskripsi" required>
+        </div>
+        <div class="form-group">
+            <label for="jobPerusahaan">Perusahaan:</label>
+            <input type="text" class="form-control" id="jobPerusahaan" required>
+        </div>
+        <div class="form-group">
+            <label for="jobLokasi">Lokasi:</label>
+            <input type="text" class="form-control" id="jobLokasi" required>
+        </div>
+        <button type="submit" class="btn btn-primary" id="submitBtn">Add Job</button>
+        <button type="button" class="btn btn-warning" id="updateBtn">Update Job</button>
+        <button type="button" class="btn btn-danger" id="deleteBtn">Delete Job</button>
+    </form>
+
+    <!-- Table to Display -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Posisi</th>
+                <th>Deskripsi</th>
+                <th>Perusahaan</th>
+                <th>Lokasi</th>
+            </tr>
+        </thead>
+        <tbody id="jobTableBody">
+            <!-- Job rows will be appended here -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        const script_url = 'https://script.google.com/macros/s/AKfycbz7kQ4Po0Snzh8yw80Zbx0dV30UvyoHxmsZfeorup8d3qDmfcEt7BQPmKEYuncycAAV/exec'; // Ganti dengan URL script Anda
+
+        // Load jobs on page load
+        loadJobs();
+
+        // Handle form submit for adding a job
+        $('#jobForm').on('submit', function (event) {
+            event.preventDefault();
+            const posisi = $('#jobPosisi').val();
+            const deskripsi = $('#jobDeskripsi').val();
+            const perusahaan = $('#jobPerusahaan').val();
+            const lokasi = $('#jobLokasi').val();
+
+            $.ajax({
+                url: script_url,
+                type: "GET",
+                dataType: "json",
+                data: { posisi: posisi, deskripsi: deskripsi, perusahaan: perusahaan, lokasi: lokasi, action: 'add' },
+                success: function (response) {
+                    alert(response.message);
+                    loadJobs();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("Request failed:", textStatus, errorThrown);
+                }
+            });
+        });
+
+        // Handle update job
+        $('#updateBtn').on('click', function () {
+            const id = $('#jobId').val();
+            const posisi = $('#jobPosisi').val();
+            const deskripsi = $('#jobDeskripsi').val();
+            const perusahaan = $('#jobPerusahaan').val();
+            const lokasi = $('#jobLokasi').val();
+
+            $.ajax({
+                url: script_url,
+                type: "GET",
+                dataType: "json",
+                data: { id: id, posisi: posisi, deskripsi: deskripsi, perusahaan: perusahaan, lokasi: lokasi, action: 'update' },
+                success: function (response) {
+                    alert(response.message);
+                    loadJobs();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("Request failed:", textStatus, errorThrown);
+                }
+            });
+        });
+
+        // Handle delete job
+        $('#deleteBtn').on('click', function () {
+            const id = $('#jobId').val();
+
+            $.ajax({
+                url: script_url,
+                type: "GET",
+                dataType: "json",
+                data: { id: id, action: 'delete' },
+                success: function (response) {
+                    alert(response.message);
+                    loadJobs();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("Request failed:", textStatus, errorThrown);
+                }
+            });
+        });
+
+        // Load jobs into the table
+        function loadJobs() {
+            $.ajax({
+                url: script_url,
+                type: "GET",
+                data: { action: "read" },
+                dataType: "json",
+                success: function (response) {
+                    const tbody = $('#jobTableBody');
+                    tbody.empty(); // Clear the table body
+                    response.forEach(job => {
+                        tbody.append(`
+                            <tr>
+                                <td>${job.id}</td>
+                                <td>${job.posisi}</td>
+                                <td>${job.deskripsi}</td>
+                                <td>${job.perusahaan}</td>
+                                <td>${job.lokasi}</td>
+                            </tr>
+                        `);
+                    });
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("Request failed:", textStatus, errorThrown);
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>
